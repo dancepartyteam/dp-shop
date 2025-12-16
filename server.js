@@ -26,22 +26,19 @@ app.post('/ecs/services/ECommerceSOAP', async (req, res) => {
   try {
     logger.debug('Received POST request to /ecs/services/ECommerceSOAP');
     
-    // Forward request to target server with same headers and body
     const response = await axios({
       method: 'POST',
       url: `${config.WIIMART_FQDN}/SOAP/ECommerceSOAP.jsp`,
       headers: req.headers,
       data: req.body,
-      validateStatus: () => true, // Accept any status code
+      validateStatus: () => true,
       maxRedirects: 0
     });
     
-    // Forward response headers back to client
     Object.keys(response.headers).forEach(key => {
       res.setHeader(key, response.headers[key]);
     });
     
-    // Send response with same status code and body
     res.status(response.status).send(response.data);
     logger.info(`Forwarded response with status: ${response.status}`);
     
